@@ -1,0 +1,284 @@
+:root {
+  --color-text: #000;
+  --color-bg: #fff;
+  --color-accent: #ffbb2d;
+  --color-primary: #ff002d;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  color: var(--color-text);
+  background-color: var(--color-accent);
+  display: flex;
+  justify-content: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+.rev {
+  color: var(--color-bg);
+  background-color: var(--color-text);
+}
+
+.container {
+  background-color: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  height: 150px;
+  background-color: var(--color-bg);
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+header > img {
+  position: absolute;
+  width: 100%;
+}
+
+nav {
+  position: sticky;
+  height: 0px;
+  right: 0;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: end;
+  gap: 0.4rem;
+}
+
+nav > a {
+  height: 40px;
+  padding: 0 1em;
+}
+a {
+  text-decoration: none;
+}
+
+.link {
+  padding: 0.4rem 1rem;
+  transition: all 0.2s 0s ease;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+}
+
+.link:hover {
+  opacity: 0.8;
+}
+
+.link:focus {
+  transition: 0s;
+  background-color: var(--color-primary);
+}
+
+.heading {
+  height: 40px;
+  position: sticky;
+  display: flex;
+  align-items: center;
+  top: 0;
+  padding-left: 1rem;
+  z-index: 1;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-bottom: 3rem;
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0;
+  padding: 0 1rem;
+}
+
+p {
+  margin: 0;
+  margin-top: -1.2em;
+  white-space: pre-line;
+}
+
+pre {
+  padding: 1rem;
+  margin: 0;
+  width: 100%;
+  word-break: break-all;
+  white-space: pre-line;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.pre-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.2rem 1rem;
+  border-radius: 0 1rem 1rem 0;
+  color: var(--color-bg);
+  background-color: var(--color-primary);
+  font-weight: bold;
+}
+
+.youtube {
+  margin: 1rem 0;
+}
+
+.link-list {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  flex-wrap: wrap;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+/* ハンバーガーメニュー */
+.menu-btn {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  display: flex;
+  height: 40px;
+  width: 40px;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  background-color: var(--color-text);
+  cursor: pointer;
+}
+.menu-btn span,
+.menu-btn span:before,
+.menu-btn span:after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 18px;
+  background-color: var(--color-bg);
+  position: absolute;
+}
+.menu-btn span:before {
+  bottom: 6px;
+}
+.menu-btn span:after {
+  top: 6px;
+}
+#menu-btn-check:checked ~ .menu-btn span {
+  background-color: rgba(255, 255, 255, 0);
+}
+#menu-btn-check:checked ~ .menu-btn span::before {
+  bottom: 0;
+  transform: rotate(45deg);
+}
+#menu-btn-check:checked ~ .menu-btn span::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+#menu-btn-check {
+  display: none;
+}
+
+.menu-content {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 100%;
+  z-index: 90;
+  background-color: var(--color-text);
+  transition: all 0.2s ease;
+  padding-top: 4rem;
+}
+#menu-btn-check:checked ~ .menu-content {
+  left: 0;
+}
+.menu-content label {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  color: var(--color-bg);
+  text-decoration: none;
+  position: relative;
+  padding: 1em;
+}
+.menu-content label:not(:first-of-type) {
+  border-top: 1px solid var(--color-bg);
+}
+.menu-content label:hover {
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+.menu-content label::before {
+  content: "";
+  width: 0.4em;
+  height: 0.4em;
+  border-top: solid 2px var(--color-bg);
+  border-right: solid 2px var(--color-bg);
+  transform: rotate(45deg);
+  position: absolute;
+  right: 1rem;
+}
+.menu-content label:hover::before {
+  border-top: solid 2px var(--color-text);
+  border-right: solid 2px var(--color-text);
+}
+
+/* メニュー表示切り替え */
+@media screen and (min-width: 834px) {
+  #menu-wrapper {
+    display: none;
+  }
+}
+@media screen and (max-width: 833px) {
+  #menu-wrapper {
+    display: initial;
+  }
+  nav {
+    display: none;
+  }
+}
+
+/* スマホ用レスポンシブ切り替え */
+@media screen and (min-width: 480px) {
+  .container {
+    width: 80%;
+    max-width: 1024px;
+  }
+  .menu-btn {
+    top: 10px;
+    right: 10px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .container {
+    width: 90%;
+  }
+}
