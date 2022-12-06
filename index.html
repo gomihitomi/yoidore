@@ -9,12 +9,6 @@
     />
     <link href="./style.css" rel="stylesheet" />
     <title>吾味人美の酔いどれラジオ</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
     <link rel="icon" href="./favicon.ico" />
   </head>
 
@@ -30,18 +24,18 @@
         <input type="checkbox" id="menu-btn-check" title="menu" />
         <label for="menu-btn-check" class="menu-btn"><span></span></label>
         <div class="menu-content">
-          <a href="#info"
-            ><label for="menu-btn-check"
-              >📻吾味人美の酔いどれラジオとは</label
-            ></a
+          <label for="menu-btn-check" onclick="location.hash = '#info'"
+            >📻吾味人美の酔いどれラジオとは</label
           >
-          <a href="#corner"
-            ><label for="menu-btn-check">🤔コーナーについて</label></a
+          <label for="menu-btn-check" onclick="location.hash = '#corner'"
+            >🤔コーナーについて</label
           >
-          <a href="#mail"
-            ><label for="menu-btn-check">📭お便りフォーム</label></a
+          <label for="menu-btn-check" onclick="location.hash = '#mail'"
+            >📭お便りフォーム</label
           >
-          <a href="#link"><label for="menu-btn-check">🔗リンク</label></a>
+          <label for="menu-btn-check" onclick="location.hash = '#link'"
+            >🔗リンク</label
+          >
         </div>
       </div>
 

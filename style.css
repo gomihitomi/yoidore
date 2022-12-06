@@ -29,7 +29,7 @@ h6 {
   margin: 0;
 }
 h2 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
 }
 
 .rev {
@@ -52,6 +52,7 @@ header {
   position: relative;
   overflow: hidden;
 }
+
 header > img {
   position: absolute;
   width: 100%;
