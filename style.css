@@ -7,6 +7,8 @@
 
 html {
   scroll-behavior: smooth;
+  font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans", Meiryo, sans-serif;
 }
 
 body {
@@ -25,6 +27,9 @@ h4,
 h5,
 h6 {
   margin: 0;
+}
+h2 {
+  font-size: 1.4rem;
 }
 
 .rev {
@@ -91,7 +96,7 @@ a {
 }
 
 .heading {
-  height: 40px;
+  min-height: 40px;
   position: sticky;
   display: flex;
   align-items: center;
@@ -281,6 +286,6 @@ footer {
 
 @media screen and (max-width: 479px) {
   .container {
-    width: 90%;
+    width: 100%;
   }
 }
