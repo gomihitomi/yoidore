@@ -8,6 +8,13 @@
       content="バーチャルインターネットラクガキマン吾味人美のラジオ、酔いどれラジオについてのサイトです。"
     />
     <link href="./style.css" rel="stylesheet" />
+    <link
+      href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+
     <title>吾味人美の酔いどれラジオ</title>
     <link rel="icon" href="./favicon.ico" />
   </head>
@@ -91,9 +98,20 @@
           <article>
             <h3>🦸一人遊びの鉄人</h3>
             <p>
-              吾味人美が考えた一人で出来る遊びをやってみるだけのコーナー。
-              手応えがあったり、評判良かった遊びに関しては複数回遊ぶこともあるかも…。
+              インターネットラジオなのに何故か一人でずっと喋っている吾味人美が考えた一人で出来る遊びをやってみるだけのコーナー。
             </p>
+            <ul>
+              <li>
+                <a
+                  class="link bg-text"
+                  href="tetsujin/bj/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  性癖ブラックジャック
+                </a>
+              </li>
+            </ul>
           </article>
         </section>
 
@@ -114,6 +132,11 @@
             >読み込んでいます…</iframe
           >
         </section>
+        <h2 class="heading bg-primary">
+          <span class="emoji">📧</span>
+          <span class="fill">今までのお便り</span>
+        </h2>
+        <section id="mail-wrapper"></section>
 
         <section id="link">
           <h2 class="heading bg-primary">
@@ -159,18 +182,22 @@
         <input type="checkbox" id="menu-btn-check" title="menu" />
         <label for="menu-btn-check" class="menu-btn"><span></span></label>
         <div class="menu-content">
-          <label for="menu-btn-check" onclick="location.hash = '#info'"
-            ><span class="emoji">📻</span>吾味人美の酔いどれラジオ？</label
-          >
-          <label for="menu-btn-check" onclick="location.hash = '#corner'"
-            ><span class="emoji">🤔</span>企画・コーナーについて</label
-          >
-          <label for="menu-btn-check" onclick="location.hash = '#mail'"
-            ><span class="emoji">📭</span>お便りフォーム</label
-          >
-          <label for="menu-btn-check" onclick="location.hash = '#link'"
-            ><span class="emoji">🔗</span>リンク</label
-          >
+          <label for="menu-btn-check" onclick="location.hash = '#info'">
+            <span class="emoji">📻 </span>
+            <span>吾味人美の酔いどれラジオ？</span>
+          </label>
+          <label for="menu-btn-check" onclick="location.hash = '#corner'">
+            <span class="emoji">🤔</span>
+            <span>企画・コーナーについて</span>
+          </label>
+          <label for="menu-btn-check" onclick="location.hash = '#mail'">
+            <span class="emoji">📭</span>
+            <span>お便りフォーム</span>
+          </label>
+          <label for="menu-btn-check" onclick="location.hash = '#link'">
+            <span class="emoji">🔗</span>
+            <span>リンク</span>
+          </label>
         </div>
       </div>
       <nav>
@@ -180,5 +207,58 @@
         <a href="#link" class="link nav-link bg-text">リンク</a>
       </nav>
     </div>
+
+    <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    <script>
+      new gridjs.Grid({
+        columns: [
+          { id: "name", name: "お名前", width: "15%" },
+          { id: "body", name: "本文", width: "80%" },
+          {
+            id: "no",
+            name: "",
+            width: "5%",
+            sort: {
+              compare: (a, b) => {
+                if (Number.parseInt(a) > Number.parseInt(b)) {
+                  return 1;
+                } else if (Number.parseInt(b) > Number.parseInt(a)) {
+                  return -1;
+                } else {
+                  return 0;
+                }
+              },
+            },
+          },
+        ],
+        sort: true,
+        pagination: { limit: 5 },
+        search: true,
+        fixedHeader: true,
+        style: {
+          header: { boxShadow: "none" },
+          footer: { boxShadow: "none" },
+        },
+        data: () => {
+          return fetch(
+            "https://sheets.googleapis.com/v4/spreadsheets/1uImWKAxCBhd3MDbY5fzGFssUZ-v_Dm-4o9AmXNRsS8c/values/archives?key=AIzaSyBlS6D64fslPzLnHPXXbAM-J4OAGZ5xWyU"
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              // ヘッダー行以外を返却
+              return data.values.splice(1);
+            });
+        },
+        language: {
+          search: {
+            placeholder: "🔍 検索",
+          },
+          pagination: {
+            previous: "prev",
+            next: "next",
+          },
+        },
+      }).render(document.getElementById("mail-wrapper"));
+    </script>
   </body>
 </html>

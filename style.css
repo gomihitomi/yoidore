@@ -1,5 +1,6 @@
 :root {
   --color-text: #000;
+  --color-grey: #d2d6dc;
   --color-bg: #fff;
   --color-accent: #ffbb2d;
   --color-primary: #ff002d;
@@ -75,6 +76,7 @@ a {
   align-items: center;
   box-sizing: border-box;
   border: 1px solid transparent;
+  width: fit-content;
 }
 
 .link:hover {
@@ -304,4 +306,35 @@ footer {
   nav {
     display: none;
   }
+}
+
+.gridjs-container {
+  padding: 0 !important;
+}
+.gridjs-wrapper {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border-top: solid 1px var(--color-grey) !important;
+  border-bottom: solid 1px var(--color-grey) !important;
+}
+.gridjs-input {
+  border-radius: 0 !important;
+  margin-left: 1rem;
+  border-color: var(--color-grey) !important;
+}
+.gridjs-table {
+  display: block !important;
+  height: 400px !important;
+  overflow-y: scroll;
+  box-shadow: none;
+  font-size: 0.8rem;
+}
+.gridjs-table td {
+  white-space: pre-wrap;
+}
+.gridjs-footer {
+  border: none !important;
+}
+.gridjs-pages button {
+  border-radius: 0 !important;
 }
