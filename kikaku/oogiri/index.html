@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>大喜利くん</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"
+    />
+    <style>
+      .container {
+        margin-top: 2em;
+      }
+      .oogiri {
+        font-size: 2em;
+        line-height: 1.2em;
+        height: 5.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top: dotted 1px #222;
+        border-bottom: dotted 1px #222;
+        margin: 1em 0;
+      }
+      .tango {
+        color: #fff;
+        background-color: #222;
+        font-weight: 700;
+        padding: 0.1em 0.2em;
+        cursor: pointer;
+      }
+      [v-cloak] {
+        visibility: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <div class="container" v-cloak>
+        <div class="row">
+          <div class="column">
+            <h4>大喜利くん</h4>
+
+            <div class="row oogiri">
+              <div>
+                <span>{{odai[0]}}</span>
+                <span class="tango" @click="changeOdai">{{tango}}</span>
+                <span>{{odai[1]}}</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="four columns">
+                <button
+                  type="button"
+                  id="character-submit"
+                  class="button-primary u-full-width"
+                  @click="createOogiri"
+                >
+                  大喜利を作る
+                </button>
+              </div>
+              <div class="four columns">
+                <button
+                  type="button"
+                  id="character-submit"
+                  class="button-primary u-full-width"
+                  @click="changeTango"
+                >
+                  単語を変える
+                </button>
+              </div>
+              <div class="four columns">
+                <button
+                  type="button"
+                  id="character-submit"
+                  class="button-primary u-full-width"
+                  @click="changeOdai"
+                >
+                  お題を変える
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="six columns">
+                <label for="tango">単語一覧</label>
+                <textarea id="tango" class="u-full-width" v-model="input.tango">
+                </textarea>
+              </div>
+              <div class="six columns">
+                <label for="odai">お題一覧</label>
+                <textarea id="odai" class="u-full-width" v-model="input.odai">
+                </textarea>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              id="character-submit"
+              class="button u-full-width"
+              @click="updateParameter"
+            >
+              単語、お題一覧をURLに保存
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js"></script>
+    <script>
+      const vm = new Vue({
+        el: "#app",
+        data: {
+          odai: "",
+          tango: "",
+          input: {
+            tango: "",
+            odai: "",
+          },
+        },
+        mounted: async function () {
+          const res = await fetch("./data.json");
+          const data = await res.json();
+
+          const params = location.search
+            .substring(1)
+            .split("&")
+            .reduce((prev, next) => {
+              const data = decodeURI(next).split("=");
+              prev[data[0]] = data[1];
+              return prev;
+            }, {});
+
+          this.input.tango = params.tango?.split(",") ?? data.tango;
+          this.input.odai = params.odai?.split(",") ?? data.odai;
+
+          this.createOogiri();
+        },
+        computed: {
+          tangoList: function () {
+            return this.input.tango.split(",");
+          },
+          odaiList: function () {
+            return this.input.odai.split(",");
+          },
+        },
+        methods: {
+          updateParameter: function () {
+            location.href =
+              location.href.replace(/\?.*$/, "") +
+              "?odai=" +
+              this.input.odai +
+              "&tango=" +
+              this.input.tango;
+          },
+          createOogiri: function () {
+            this.changeOdai();
+            this.changeTango();
+          },
+          changeOdai: function () {
+            this.odai = this.getRandom(this.input.odai).split("$tango");
+          },
+          changeTango: function () {
+            this.tango = this.getRandom(this.input.tango);
+          },
+          getRandom: function (array) {
+            return array[Math.floor(Math.random() * array.length)];
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
