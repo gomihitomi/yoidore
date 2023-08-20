@@ -1,358 +1,378 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="バーチャルインターネットラクガキマン吾味人美のラジオ、酔いどれラジオについてのサイトです。"
-    />
-    <title>性癖ブラックジャック</title>
-    <link rel="icon" href="./favicon.ico" />
-    <style>
-      [v-cloak] {
-        display: none;
-      }
-      body {
-        font-family: "M PLUS Rounded 1c", sans-serif;
-        background-color: #0c964a;
-        -webkit-user-select: none;
-        user-select: none;
-      }
-      button {
-        font-family: "M PLUS Rounded 1c", sans-serif;
-        cursor: pointer;
-        outline: none;
-        appearance: none;
-        padding: 4px 8px;
-        border-radius: 4px;
-        border: 1px solid #000;
-        background-color: #fff;
-        transition: all 0.2s ease;
-      }
-      button:hover {
-        background-color: #ddd;
-      }
-      button:disabled {
-        background-color: #aaa;
-        cursor: default;
-      }
-      button:active {
-        background-color: #aaa;
-      }
-      .control {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 16px;
-      }
-      .card-list {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 16px;
-        flex-wrap: wrap;
-      }
-      .card {
-        width: 100px;
-        height: 160px;
-        padding: 8px;
-        display: flex;
-        flex-direction: column;
-        border: 1px solid #000;
-        background-color: #fff;
-        position: relative;
-        border-radius: 4px;
-      }
-      .red {
-        color: red;
-      }
-      .card-back {
-        background-color: #ce1e15;
-        cursor: pointer;
-      }
-      .card-suit {
-        position: absolute;
-      }
-      .card-text {
-        writing-mode: vertical-rl;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        font-size: 1.5em;
-      }
-      .fill {
-        color: #fff;
-        font-weight: bold;
-        text-shadow: -1px -1px 0px #000, 0px -1px 0px #000, 1px -1px 0px #000,
-          -1px 0px 0px #000, 0px 0px 0px #000, 1px 0px 0px #000,
-          -1px 1px 0px #000, 0px 1px 0px #000, 1px 1px 0px #000;
-      }
 
-      .fade-enter-from {
-        opacity: 0;
-        transform: translate(8px, 0);
-      }
-      .fade-enter-to {
-        opacity: 1;
-        transform: translate(0, 0);
-      }
-      .fade-enter-active,
-      .fade-leave-from,
-      .fade-leave-to {
-        transition: all 0.2s ease;
-      }
-      .fade-leave-active {
-        transition: all 0s;
-      }
-    </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="バーチャルインターネットラクガキマン吾味人美のラジオ、酔いどれラジオについてのサイトです。" />
+  <title>性癖ブラックジャック</title>
+  <link rel="icon" href="./favicon.ico" />
+  <style>
+    [v-cloak] {
+      display: none;
+    }
 
-  <body>
-    <div id="app" v-cloak>
-      <div class="control">
-        <button @click="reset" type="button">リセット</button>
-        <button
-          @click="handDraw"
-          type="button"
-          v-bind:disabled="isDisabledDraw"
-        >
-          自分がドロー
-        </button>
-        <button
-          @click="dealerDraw"
-          type="button"
-          v-bind:disabled="isDisabledDealerDraw"
-        >
-          ディーラーがドロー
-        </button>
-      </div>
-      <div class="card-field">
-        <span class="fill">
-          ディーラーの手札: {{getPointText(calcDealerPoint)}}
-        </span>
-        <transition-group tag="div" name="fade" appear class="card-list">
-          <div v-for="(card, index) in dealerCards" :key="card.id">
-            <div class="card" v-if="index !== 1 || isDelerOpen">
-              <span class="card-suit" v-bind:class="{ red: isRed(card.suit) }">
-                {{getSuitMark(card.suit)}}{{getNumberText(card.number)}}
-              </span>
-              <span class="card-text">{{card.text}}</span>
-            </div>
-            <div v-else class="card card-back" @click="dealerOpen"></div>
-          </div>
-        </transition-group>
+    body {
+      font-family: "M PLUS Rounded 1c", sans-serif;
+      background-color: #0c964a;
+      -webkit-user-select: none;
+      user-select: none;
+    }
 
-        <span class="fill">自分の手札: {{getPointText(calcHandPoint)}}</span>
-        <transition-group tag="div" name="fade" appear class="card-list">
-          <div v-for="card in handCards" class="card" :key="card.id">
+    button {
+      font-family: "M PLUS Rounded 1c", sans-serif;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid #000;
+      background-color: #fff;
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #ddd;
+    }
+
+    button:disabled {
+      background-color: #aaa;
+      cursor: default;
+    }
+
+    button:active {
+      background-color: #aaa;
+    }
+
+    .control {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .card-list {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      width: 100px;
+      height: 160px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #000;
+      background-color: #fff;
+      position: relative;
+      border-radius: 4px;
+    }
+
+    .red {
+      color: red;
+    }
+
+    .card-back {
+      background-color: #ce1e15;
+      cursor: pointer;
+    }
+
+    .card-suit {
+      position: absolute;
+    }
+
+    .card-text {
+      writing-mode: vertical-rl;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: 1.5em;
+    }
+
+    .fill {
+      color: #fff;
+      font-weight: bold;
+      text-shadow: -1px -1px 0px #000, 0px -1px 0px #000, 1px -1px 0px #000,
+        -1px 0px 0px #000, 0px 0px 0px #000, 1px 0px 0px #000,
+        -1px 1px 0px #000, 0px 1px 0px #000, 1px 1px 0px #000;
+    }
+
+    .fade-enter-from {
+      opacity: 0;
+      transform: translate(8px, 0);
+    }
+
+    .fade-enter-to {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+
+    .fade-enter-active,
+    .fade-leave-from,
+    .fade-leave-to {
+      transition: all 0.2s ease;
+    }
+
+    .fade-leave-active {
+      transition: all 0s;
+    }
+
+    .theme {
+      background-color: #000;
+      color: white;
+      font-weight: 700;
+      padding: 0.2em 0.5em;
+      font-size: 1.5em;
+      width: fit-content;
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="app" v-cloak>
+    <div class="control">
+      <button @click="reset" type="button">リセット</button>
+      <button @click="handDraw" type="button" v-bind:disabled="isDisabledDraw">
+        自分がドロー
+      </button>
+      <button @click="dealerDraw" type="button" v-bind:disabled="isDisabledDealerDraw">
+        ディーラーがドロー
+      </button>
+    </div>
+    <div class="theme">
+      テーマ: {{theme}}
+    </div>
+    <div class="card-field">
+      <span class="fill">
+        ディーラーの手札: {{getPointText(calcDealerPoint)}}
+      </span>
+      <transition-group tag="div" name="fade" appear class="card-list">
+        <div v-for="(card, index) in dealerCards" :key="card.id">
+          <div class="card" v-if="index !== 1 || isDelerOpen">
             <span class="card-suit" v-bind:class="{ red: isRed(card.suit) }">
               {{getSuitMark(card.suit)}}{{getNumberText(card.number)}}
             </span>
             <span class="card-text">{{card.text}}</span>
           </div>
-        </transition-group>
-      </div>
+          <div v-else class="card card-back" @click="dealerOpen"></div>
+        </div>
+      </transition-group>
+
+      <span class="fill">自分の手札: {{getPointText(calcHandPoint)}}</span>
+      <transition-group tag="div" name="fade" appear class="card-list">
+        <div v-for="card in handCards" class="card" :key="card.id">
+          <span class="card-suit" v-bind:class="{ red: isRed(card.suit) }">
+            {{getSuitMark(card.suit)}}{{getNumberText(card.number)}}
+          </span>
+          <span class="card-text">{{card.text}}</span>
+        </div>
+      </transition-group>
     </div>
+  </div>
 
-    <script src="https://unpkg.com/vue@next"></script>
-    <script>
-      const MAP = {
-        HEART: "❤",
-        SPADE: "♠",
-        CLUB: "♣",
-        DIAMOND: "♦",
-      };
+  <script src="https://unpkg.com/vue@next"></script>
+  <script>
+    const MAP = {
+      HEART: "❤",
+      SPADE: "♠",
+      CLUB: "♣",
+      DIAMOND: "♦",
+    };
 
-      const CARD = [
-        { id: 0, number: 1, point: [1, 11], suit: "HEART", text: "方言" },
-        { id: 1, number: 2, point: [2], suit: "HEART", text: "後輩" },
-        { id: 2, number: 3, point: [3], suit: "HEART", text: "太眉" },
-        { id: 3, number: 4, point: [4], suit: "HEART", text: "病弱" },
-        { id: 4, number: 5, point: [5], suit: "HEART", text: "先輩" },
-        { id: 5, number: 6, point: [6], suit: "HEART", text: "ぽっちゃり" },
-        { id: 6, number: 7, point: [7], suit: "HEART", text: "ママ" },
-        { id: 7, number: 8, point: [8], suit: "HEART", text: "タトゥー" },
-        { id: 8, number: 9, point: [9], suit: "HEART", text: "ピアス" },
-        { id: 9, number: 10, point: [10], suit: "HEART", text: "バカ" },
-        { id: 10, number: 11, point: [10], suit: "HEART", text: "おてんば" },
-        { id: 11, number: 12, point: [10], suit: "HEART", text: "オタク" },
-        { id: 12, number: 13, point: [10], suit: "HEART", text: "マッシブ" },
-        { id: 13, number: 1, point: [1, 11], suit: "CLUB", text: "ギャル" },
-        { id: 14, number: 2, point: [2], suit: "CLUB", text: "不良" },
-        { id: 15, number: 3, point: [3], suit: "CLUB", text: "黒髪" },
-        { id: 16, number: 4, point: [4], suit: "CLUB", text: "貧乳" },
-        { id: 17, number: 5, point: [5], suit: "CLUB", text: "ヤンデレ" },
-        { id: 18, number: 6, point: [6], suit: "CLUB", text: "メンヘラ" },
-        { id: 19, number: 7, point: [7], suit: "CLUB", text: "飲酒" },
-        { id: 20, number: 8, point: [8], suit: "CLUB", text: "スレンダー" },
-        { id: 21, number: 9, point: [9], suit: "CLUB", text: "食いしん坊" },
-        { id: 22, number: 10, point: [10], suit: "CLUB", text: "サイボーグ" },
-        { id: 23, number: 11, point: [10], suit: "CLUB", text: "学生服" },
-        { id: 24, number: 12, point: [10], suit: "CLUB", text: "喫煙" },
-        { id: 25, number: 13, point: [10], suit: "CLUB", text: "クール" },
-        { id: 26, number: 1, point: [1, 11], suit: "DIAMOND", text: "ギザ歯" },
-        { id: 27, number: 2, point: [2], suit: "DIAMOND", text: "ツンデレ" },
-        { id: 28, number: 3, point: [3], suit: "DIAMOND", text: "眼鏡" },
-        { id: 29, number: 4, point: [4], suit: "DIAMOND", text: "傷跡" },
-        { id: 30, number: 5, point: [5], suit: "DIAMOND", text: "糸目" },
-        { id: 31, number: 6, point: [6], suit: "DIAMOND", text: "ほくろ" },
-        {
-          id: 32,
-          number: 7,
-          point: [7],
-          suit: "DIAMOND",
-          text: "ミステリアス",
-        },
-        { id: 33, number: 8, point: [8], suit: "DIAMOND", text: "熟女" },
-        { id: 34, number: 9, point: [9], suit: "DIAMOND", text: "眼帯" },
-        { id: 35, number: 10, point: [10], suit: "DIAMOND", text: "老人" },
-        { id: 36, number: 11, point: [10], suit: "DIAMOND", text: "ジト目" },
-        {
-          id: 37,
-          number: 12,
-          point: [10],
-          suit: "DIAMOND",
-          text: "ボーイッシュ",
-        },
-        { id: 38, number: 13, point: [10], suit: "DIAMOND", text: "ロリ" },
-        { id: 39, number: 1, point: [1, 11], suit: "SPADE", text: "イケメン" },
-        { id: 40, number: 2, point: [2], suit: "SPADE", text: "巨乳" },
-        { id: 41, number: 3, point: [3], suit: "SPADE", text: "お嬢様" },
-        { id: 42, number: 4, point: [4], suit: "SPADE", text: "金髪" },
-        { id: 43, number: 5, point: [5], suit: "SPADE", text: "目隠れ" },
-        { id: 44, number: 6, point: [6], suit: "SPADE", text: "アホ毛" },
-        { id: 45, number: 7, point: [7], suit: "SPADE", text: "スーツ" },
-        { id: 46, number: 8, point: [8], suit: "SPADE", text: "肉食系" },
-        { id: 47, number: 9, point: [9], suit: "SPADE", text: "ドジっ娘" },
-        { id: 48, number: 10, point: [10], suit: "SPADE", text: "八重歯" },
-        { id: 49, number: 11, point: [10], suit: "SPADE", text: "褐色肌" },
-        { id: 50, number: 12, point: [10], suit: "SPADE", text: "インテリ" },
-        { id: 51, number: 13, point: [10], suit: "SPADE", text: "長身" },
-      ];
+    const CARD = [
+      { id: 0, number: 1, point: [1, 11], suit: "HEART", text: "敬語" },
+      { id: 1, number: 2, point: [2], suit: "HEART", text: "後輩" },
+      { id: 2, number: 3, point: [3], suit: "HEART", text: "殺し屋" },
+      { id: 3, number: 4, point: [4], suit: "HEART", text: "病弱" },
+      { id: 4, number: 5, point: [5], suit: "HEART", text: "先輩" },
+      { id: 5, number: 6, point: [6], suit: "HEART", text: "ナルシスト" },
+      { id: 6, number: 7, point: [7], suit: "HEART", text: "天才" },
+      { id: 7, number: 8, point: [8], suit: "HEART", text: "タトゥー" },
+      { id: 8, number: 9, point: [9], suit: "HEART", text: "ピアス" },
+      { id: 9, number: 10, point: [10], suit: "HEART", text: "バカ" },
+      { id: 10, number: 11, point: [10], suit: "HEART", text: "貧乏" },
+      { id: 11, number: 12, point: [10], suit: "HEART", text: "オタク" },
+      { id: 12, number: 13, point: [10], suit: "HEART", text: "無感情" },
+      { id: 13, number: 1, point: [1, 11], suit: "CLUB", text: "ギャル" },
+      { id: 14, number: 2, point: [2], suit: "CLUB", text: "不良" },
+      { id: 15, number: 3, point: [3], suit: "CLUB", text: "不老不死" },
+      { id: 16, number: 4, point: [4], suit: "CLUB", text: "メイド" },
+      { id: 17, number: 5, point: [5], suit: "CLUB", text: "ヤンデレ" },
+      { id: 18, number: 6, point: [6], suit: "CLUB", text: "メンヘラ" },
+      { id: 19, number: 7, point: [7], suit: "CLUB", text: "飲酒" },
+      { id: 20, number: 8, point: [8], suit: "CLUB", text: "スレンダー" },
+      { id: 21, number: 9, point: [9], suit: "CLUB", text: "食いしん坊" },
+      { id: 22, number: 10, point: [10], suit: "CLUB", text: "サイボーグ" },
+      { id: 23, number: 11, point: [10], suit: "CLUB", text: "学生" },
+      { id: 24, number: 12, point: [10], suit: "CLUB", text: "喫煙" },
+      { id: 25, number: 13, point: [10], suit: "CLUB", text: "クール" },
+      { id: 26, number: 1, point: [1, 11], suit: "DIAMOND", text: "ギザ歯" },
+      { id: 27, number: 2, point: [2], suit: "DIAMOND", text: "ツンデレ" },
+      { id: 28, number: 3, point: [3], suit: "DIAMOND", text: "眼鏡" },
+      { id: 29, number: 4, point: [4], suit: "DIAMOND", text: "電波系" },
+      { id: 30, number: 5, point: [5], suit: "DIAMOND", text: "糸目" },
+      { id: 31, number: 6, point: [6], suit: "DIAMOND", text: "男装" },
+      {
+        id: 32,
+        number: 7,
+        point: [7],
+        suit: "DIAMOND",
+        text: "幼馴染",
+      },
+      { id: 33, number: 8, point: [8], suit: "DIAMOND", text: "苦労人" },
+      { id: 34, number: 9, point: [9], suit: "DIAMOND", text: "オッドアイ" },
+      { id: 35, number: 10, point: [10], suit: "DIAMOND", text: "三白眼" },
+      { id: 36, number: 11, point: [10], suit: "DIAMOND", text: "隈" },
+      {
+        id: 37,
+        number: 12,
+        point: [10],
+        suit: "DIAMOND",
+        text: "ボーイッシュ",
+      },
+      { id: 38, number: 13, point: [10], suit: "DIAMOND", text: "チビ" },
+      { id: 39, number: 1, point: [1, 11], suit: "SPADE", text: "イケメン" },
+      { id: 40, number: 2, point: [2], suit: "SPADE", text: "上司" },
+      { id: 41, number: 3, point: [3], suit: "SPADE", text: "お嬢様" },
+      { id: 42, number: 4, point: [4], suit: "SPADE", text: "部下" },
+      { id: 43, number: 5, point: [5], suit: "SPADE", text: "目隠れ" },
+      { id: 44, number: 6, point: [6], suit: "SPADE", text: "アホ毛" },
+      { id: 45, number: 7, point: [7], suit: "SPADE", text: "スーツ" },
+      { id: 46, number: 8, point: [8], suit: "SPADE", text: "肉食系" },
+      { id: 47, number: 9, point: [9], suit: "SPADE", text: "ドジっ娘" },
+      { id: 48, number: 10, point: [10], suit: "SPADE", text: "八重歯" },
+      { id: 49, number: 11, point: [10], suit: "SPADE", text: "褐色肌" },
+      { id: 50, number: 12, point: [10], suit: "SPADE", text: "インテリ" },
+      { id: 51, number: 13, point: [10], suit: "SPADE", text: "長身" },
+    ];
 
-      const App = {
-        data() {
-          return {
-            deck: [],
-            isDelerOpen: false,
-            dealer: [],
-            hand: [],
-          };
-        },
-        computed: {
-          dealerCards() {
-            return this.dealer.map((h) => CARD.find((c) => c.id === h));
-          },
-          handCards() {
-            return this.hand.map((h) => CARD.find((c) => c.id === h));
-          },
-          calcDealerPoint() {
-            if (!this.isDelerOpen) {
-              return [this.dealerCards[0]?.point];
-            }
-            const points = this.dealerCards.map((v) => v.point);
-            return this.calcPoint(points);
-          },
-          calcHandPoint() {
-            const points = this.handCards.map((v) => v.point);
-            return this.calcPoint(points);
-          },
-          isDisabledDealerDraw() {
-            return (
-              Math.min(...this.calcDealerPoint) > 16 ||
-              Math.max(...this.calcHandPoint) === 21 ||
-              Math.max(...this.calcDealerPoint) === 21 ||
-              this.calcHandPoint.length === 0 ||
-              this.calcDealerPoint.length === 0
-            );
-          },
-          isDisabledDraw() {
-            return (
-              this.isDelerOpen ||
-              Math.max(...this.calcHandPoint) === 21 ||
-              Math.max(...this.calcDealerPoint) === 21 ||
-              this.calcHandPoint.length === 0 ||
-              this.calcDealerPoint.length === 0
-            );
-          },
-        },
-        mounted() {
-          this.reset();
-        },
-        methods: {
-          calcPoint(points) {
-            if (!points || points.length === 0) return [];
+    const THEME = ["ラブコメ", "ファンタジー", "SF", "ポストアポカリプス", "学園物", "大正ロマン", "日常", "萌え", "成人向け", "スポーツ", "ギャグ", "音楽", "料理", "グルメ", "ミステリー", "ホラー", "お仕事", "格闘"];
 
-            const calcDatas = points.slice(1).reduce((p, c) => {
-              const result = c.length === 2 ? [[...p], [...p]] : [[...p]];
-              c.forEach((currentValue, i) => {
-                result[i] = p.map(
-                  (prevValue) =>
-                    Number.parseInt(prevValue) + Number.parseInt(currentValue)
-                );
-              });
-              return result.flatMap((v) => v);
-            }, ...points.slice(0, 1));
-
-            return Array.from(new Set(calcDatas)).filter((v) => v <= 21);
-          },
-          getPointText(points) {
-            if (!points) return "";
-            if (points.length === 0) return "Bust";
-            if (points.includes(21)) return "BLACK JACK";
-            return points.flatMap((v) => v).join("/");
-          },
-          shuffle([...array]) {
-            for (let i = array.length - 1; i >= 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1));
-              [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-          },
-          reset() {
-            this.isDelerOpen = false;
-            this.deck = this.shuffle([...Array(52).keys()]);
-            this.dealer = this.deck.splice(0, 2);
-            this.hand = this.deck.splice(0, 2);
-          },
-          handDraw() {
-            this.hand.push(this.deck.shift());
-          },
-          getSuitMark(suit) {
-            return MAP[suit];
-          },
-          getNumberText(number) {
-            if (number < 11) return number;
-            switch (number) {
-              case 11:
-                return "J";
-              case 12:
-                return "Q";
-              case 13:
-                return "K";
-            }
-          },
-          isRed(suit) {
-            return suit === "HEART" || suit === "DIAMOND";
-          },
-          dealerOpen() {
-            if (this.isDisabledDealerDraw) return;
-            this.isDelerOpen = true;
-          },
-          dealerDraw() {
-            if (!this.isDelerOpen) this.isDelerOpen = true;
-            this.dealer.push(this.deck.shift());
-          },
+    const App = {
+      data() {
+        return {
+          theme: "",
+          deck: [],
+          isDelerOpen: false,
+          dealer: [],
+          hand: [],
+        };
+      },
+      computed: {
+        dealerCards() {
+          return this.dealer.map((h) => CARD.find((c) => c.id === h));
         },
-      };
+        handCards() {
+          return this.hand.map((h) => CARD.find((c) => c.id === h));
+        },
+        calcDealerPoint() {
+          if (!this.isDelerOpen) {
+            return [this.dealerCards[0]?.point];
+          }
+          const points = this.dealerCards.map((v) => v.point);
+          return this.calcPoint(points);
+        },
+        calcHandPoint() {
+          const points = this.handCards.map((v) => v.point);
+          return this.calcPoint(points);
+        },
+        isDisabledDealerDraw() {
+          return (
+            Math.min(...this.calcDealerPoint) > 16 ||
+            Math.max(...this.calcHandPoint) === 21 ||
+            Math.max(...this.calcDealerPoint) === 21 ||
+            this.calcHandPoint.length === 0 ||
+            this.calcDealerPoint.length === 0
+          );
+        },
+        isDisabledDraw() {
+          return (
+            this.isDelerOpen ||
+            Math.max(...this.calcHandPoint) === 21 ||
+            Math.max(...this.calcDealerPoint) === 21 ||
+            this.calcHandPoint.length === 0 ||
+            this.calcDealerPoint.length === 0
+          );
+        },
+      },
+      mounted() {
+        this.reset();
+      },
+      methods: {
+        calcPoint(points) {
+          if (!points || points.length === 0) return [];
 
-      Vue.createApp(App).mount("#app");
-    </script>
-  </body>
+          const calcDatas = points.slice(1).reduce((p, c) => {
+            const result = c.length === 2 ? [[...p], [...p]] : [[...p]];
+            c.forEach((currentValue, i) => {
+              result[i] = p.map(
+                (prevValue) =>
+                  Number.parseInt(prevValue) + Number.parseInt(currentValue)
+              );
+            });
+            return result.flatMap((v) => v);
+          }, ...points.slice(0, 1));
+
+          return Array.from(new Set(calcDatas)).filter((v) => v <= 21);
+        },
+        getPointText(points) {
+          if (!points) return "";
+          if (points.length === 0) return "Bust";
+          if (points.includes(21)) return "BLACK JACK";
+          return points.flatMap((v) => v).join("/");
+        },
+        shuffle([...array]) {
+          for (let i = array.length - 1; i >= 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+          }
+          return array;
+        },
+        reset() {
+          this.isDelerOpen = false;
+          this.deck = this.shuffle([...Array(52).keys()]);
+          this.dealer = this.deck.splice(0, 2);
+          this.hand = this.deck.splice(0, 2);
+          this.theme = THEME[Math.floor(Math.random() * THEME.length)];
+        },
+        handDraw() {
+          this.hand.push(this.deck.shift());
+        },
+        getSuitMark(suit) {
+          return MAP[suit];
+        },
+        getNumberText(number) {
+          if (number < 11) return number;
+          switch (number) {
+            case 11:
+              return "J";
+            case 12:
+              return "Q";
+            case 13:
+              return "K";
+          }
+        },
+        isRed(suit) {
+          return suit === "HEART" || suit === "DIAMOND";
+        },
+        dealerOpen() {
+          if (this.isDisabledDealerDraw) return;
+          this.isDelerOpen = true;
+        },
+        dealerDraw() {
+          if (!this.isDelerOpen) this.isDelerOpen = true;
+          this.dealer.push(this.deck.shift());
+        },
+      },
+    };
+
+    Vue.createApp(App).mount("#app");
+  </script>
+</body>
+
 </html>
